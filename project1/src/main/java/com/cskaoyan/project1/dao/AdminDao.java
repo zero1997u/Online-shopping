@@ -20,4 +20,8 @@ public interface AdminDao {
    void updateAdmin(String requestBody);
 
    Admin getAdminsInfo(int id);
+
+   List<Admin> getSearchAdmins(Admin admin);
+
+   int changePwd(Admin admin);
 }

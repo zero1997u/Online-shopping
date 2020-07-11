@@ -4,6 +4,8 @@ import com.cskaoyan.project1.dao.AdminDao;
 import com.cskaoyan.project1.dao.AdminDaoImpl;
 import com.cskaoyan.project1.model.Admin;
 import com.cskaoyan.project1.model.bo.AdminLoginBO;
+import com.cskaoyan.project1.model.bo.AdminPwdBO;
+import com.cskaoyan.project1.model.bo.AdminSearchBO;
 import com.cskaoyan.project1.utils.DruidUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -49,6 +51,22 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Admin getAdminsInfo(int id) {
         return adminDao.getAdminsInfo(id);
+    }
+
+    @Override
+    public List<Admin> getSearchAdmins(AdminSearchBO searchBO) {
+        Admin admin = new Admin();
+        admin.setEmail(searchBO.getEmail());
+        admin.setNickname(searchBO.getNickname());
+        return adminDao.getSearchAdmins(admin);
+    }
+
+    @Override
+    public int changePwd(AdminPwdBO adminPwdBO) {
+        Admin admin = new Admin();
+        admin.setNickname(adminPwdBO.getAdminToken());
+        admin.setPwd(adminPwdBO.getNewPwd());
+        return adminDao.changePwd(admin);
     }
 
 }

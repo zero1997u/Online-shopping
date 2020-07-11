@@ -3,6 +3,8 @@ package com.cskaoyan.project1.controller;
 import com.cskaoyan.project1.model.Admin;
 import com.cskaoyan.project1.model.Result;
 import com.cskaoyan.project1.model.bo.AdminLoginBO;
+import com.cskaoyan.project1.model.bo.AdminPwdBO;
+import com.cskaoyan.project1.model.bo.AdminSearchBO;
 import com.cskaoyan.project1.model.vo.AdminLoginVo;
 import com.cskaoyan.project1.service.AdminService;
 import com.cskaoyan.project1.service.AdminServiceImpl;
@@ -37,19 +39,47 @@ public class AdminServlet extends HttpServlet {
             addAdmins(request,response);
         }else if("updateAdminss".equals(action)){
             updateAdmins(request,response);
+        }else if("getSearchAdmins".equals(action)){
+            getSearchAdmins(request,response);
+        }else if("changePwd".equals(action)){
+            changePwd(request,response);
         }
+    }
+
+    private void changePwd(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String requestBody = HttpUtils.getRequestBody(request);
+        AdminPwdBO adminPwdBO = gson.fromJson(requestBody,AdminPwdBO.class);
+        int res = adminService.changePwd(adminPwdBO);
+        if(res == 1)
+        response.getWriter().println(gson.toJson(Result.ok(0)));
+        else{
+            response.getWriter().println(gson.toJson(Result.error("修改失败")));
+        }
+    }
+
+    /**
+     * @Description :条件查询admin管理员的信息
+       @param request
+	 * @param response
+     * @Return : void
+     */
+    private void getSearchAdmins(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String requestBody = HttpUtils.getRequestBody(request);
+        AdminSearchBO searchBO = gson.fromJson(requestBody, AdminSearchBO.class);
+        List<Admin> admins = adminService.getSearchAdmins(searchBO);
+        response.getWriter().println(gson.toJson(Result.ok(admins)));
     }
 
     private void updateAdmins(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestBody = HttpUtils.getRequestBody(request);
-        System.out.println(requestBody);
+    //    System.out.println(requestBody);
         adminService.updateAdmins(requestBody);
         response.getWriter().println(gson.toJson(Result.ok(0)));
     }
 
     private void addAdmins(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestBody = HttpUtils.getRequestBody(request);
-        System.out.println(requestBody);
+      //  System.out.println(requestBody);
         int res = adminService.addAdmin(requestBody);
         response.getWriter().println(gson.toJson(Result.ok(0)));
 
@@ -70,6 +100,7 @@ public class AdminServlet extends HttpServlet {
         adminService.login(loginBO);
         Admin login = adminService.login(loginBO);
         if(login!=null){
+            request.getSession().setAttribute("admin",login);
             AdminLoginVo loginVo = new AdminLoginVo();
             loginVo.setToken(login.getNickname());
             loginVo.setName(login.getNickname());

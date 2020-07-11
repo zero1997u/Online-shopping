@@ -2,6 +2,8 @@ package com.cskaoyan.project1.service;
 
 import com.cskaoyan.project1.model.Admin;
 import com.cskaoyan.project1.model.bo.AdminLoginBO;
+import com.cskaoyan.project1.model.bo.AdminPwdBO;
+import com.cskaoyan.project1.model.bo.AdminSearchBO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,4 +23,8 @@ public interface AdminService {
     void updateAdmins(String requestBody);
 
     Admin getAdminsInfo(int id);
+
+    List<Admin> getSearchAdmins(AdminSearchBO searchBO);
+
+    int changePwd(AdminPwdBO adminPwdBO);
 }
